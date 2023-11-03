@@ -7,7 +7,6 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QLabel, QLineEdit,
     QPushButton, QSizePolicy, QTextBrowser, QWidget, QDialog, QVBoxLayout, QMessageBox)
-from transitions import Machine
 
 saldoTotal = 0
 saldoAwal = 0
