@@ -705,6 +705,7 @@ class vending_machine(object):
             self.pushButton_3.setEnabled(True)
             self.pushButton_4.setEnabled(True)
             self.pushButton_5.setEnabled(True)
+            self.pushButton_6.setDisabled(True)
             self.pushButton_next.setDisabled(True)
             self.pushButton_reset.setDisabled(True)
         if (len(pilihanSayur) != 0 and len(pilihanDressing) != 0):
