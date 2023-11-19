@@ -17,7 +17,7 @@ pilihanDressing = []
 class Ui_Widget(object):
     def setupUi(self, Widget):
         if not Widget.objectName():
-            Widget.setObjectName(u"Widget")
+            Widget.setObjectName(u"Vending Machine")
         Widget.resize(499, 624)
 
         # Ui Section
@@ -341,7 +341,7 @@ class Ui_Widget(object):
     # setupUi
 
     def retranslateUi(self, Widget):
-        Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Widget", None))
+        Widget.setWindowTitle(QCoreApplication.translate("Vending Machine", u"Vending Machine", None))
         self.label_8.setText(QCoreApplication.translate("Widget", u"2", None))
         self.label_11.setText(QCoreApplication.translate("Widget", u"5", None))
         self.timun.setText("")
