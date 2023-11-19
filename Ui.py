@@ -7,12 +7,14 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QLabel, QLineEdit,
     QPushButton, QSizePolicy, QTextBrowser, QWidget, QDialog, QVBoxLayout, QMessageBox)
-from transitions import Machine
 
 saldoTotal = 0
 saldoAwal = 0
 pilihanSayur = []
 pilihanDressing = []
+inputUser = []
+travelledStates = ['Q0']
+currentState = 'Q0'
 
 class Ui_Widget(object):
     def setupUi(self, Widget):
@@ -272,19 +274,19 @@ class Ui_Widget(object):
         
         self.pushButton_uang.clicked.connect(self.openDompet)
         self.pushButton_kembalian.clicked.connect(lambda:self.tampilKembalian())
-        self.pushButton_next.clicked.connect(lambda:vending_machine.next(self))
-        self.pushButton_cancel.clicked.connect(lambda:vending_machine.cancel(self))
-        self.pushButton_reset.clicked.connect(lambda:vending_machine.reset(self))
-        self.pushButton_1.clicked.connect(lambda:vending_machine.pilih_sayuran(self, 'a'))
-        self.pushButton_2.clicked.connect(lambda:vending_machine.pilih_sayuran(self, 'b'))
-        self.pushButton_3.clicked.connect(lambda:vending_machine.pilih_sayuran(self, 'c'))
-        self.pushButton_4.clicked.connect(lambda:vending_machine.pilih_sayuran(self, 'd'))
-        self.pushButton_5.clicked.connect(lambda:vending_machine.pilih_sayuran(self, 'e'))
-        self.pushButton_6.clicked.connect(lambda:vending_machine.pilih_sayuran(self, 'f'))
-        self.pushButton_a.clicked.connect(lambda:vending_machine.pilih_dressing(self, 'g'))
-        self.pushButton_b.clicked.connect(lambda:vending_machine.pilih_dressing(self, 'h'))
-        self.pushButton_c.clicked.connect(lambda:vending_machine.pilih_dressing(self, 'i'))
-        self.pushButton_d.clicked.connect(lambda:vending_machine.pilih_dressing(self, 'j'))
+        self.pushButton_next.clicked.connect(lambda:vending_machine.transisi(self, 's'))
+        self.pushButton_cancel.clicked.connect(lambda:vending_machine.transisi(self, 'r'))
+        self.pushButton_reset.clicked.connect(lambda:vending_machine.transisi(self, 'p'))
+        self.pushButton_1.clicked.connect(lambda:vending_machine.transisi(self, 'a'))
+        self.pushButton_2.clicked.connect(lambda:vending_machine.transisi(self, 'b'))
+        self.pushButton_3.clicked.connect(lambda:vending_machine.transisi(self, 'c'))
+        self.pushButton_4.clicked.connect(lambda:vending_machine.transisi(self, 'd'))
+        self.pushButton_5.clicked.connect(lambda:vending_machine.transisi(self, 'e'))
+        self.pushButton_6.clicked.connect(lambda:vending_machine.transisi(self, 'f'))
+        self.pushButton_a.clicked.connect(lambda:vending_machine.transisi(self, 'g'))
+        self.pushButton_b.clicked.connect(lambda:vending_machine.transisi(self, 'h'))
+        self.pushButton_c.clicked.connect(lambda:vending_machine.transisi(self, 'i'))
+        self.pushButton_d.clicked.connect(lambda:vending_machine.transisi(self, 'j'))
 
 
         self.pushButton_salad.clicked.connect(lambda:self.tampilSalad())
@@ -298,6 +300,9 @@ class Ui_Widget(object):
         global pilihanDressing
         global saldoTotal
         global saldoAwal
+        global currentState
+        global travelledStates
+        global inputUser
         self.dialog = Salad()
         self.dialog.exec_()
         self.pushButton_salad.setDisabled(True)
@@ -307,6 +312,10 @@ class Ui_Widget(object):
             self.pushButton_uang.setEnabled(True)
             pilihanDressing.clear()
             pilihanSayur.clear()
+            inputUser.clear()
+            travelledStates.clear()
+            currentState = 'Q0'
+            travelledStates.append(currentState)
             saldoTotal = 0
             saldoAwal = 0
             self.saldo.setText("Rp " + str(saldoTotal))
@@ -318,11 +327,18 @@ class Ui_Widget(object):
         global saldoAwal
         global  pilihanSayur
         global pilihanDressing
+        global currentState
+        global travelledStates
+        global inputUser
         self.dialog = Kembalian()
         self.dialog.exec_()
         self.pushButton_kembalian.setDisabled(True)
         pilihanDressing.clear()
         pilihanSayur.clear()
+        inputUser.clear()
+        travelledStates.clear()
+        currentState = 'Q0'
+        travelledStates.append(currentState)
         saldoTotal = 0
         saldoAwal = 0
         self.saldo.setText("Rp " + str(saldoTotal))
@@ -445,6 +461,12 @@ class Salad(QDialog):
         # Widget DressingPilihan
         dressingPilihan = QLabel("Dressing yang dipilih: " + str(pilihanDressing))
         layout.addWidget(dressingPilihan)
+
+        saladPilihan = QLabel("Inputan User: " + str(inputUser))
+        layout.addWidget(saladPilihan)
+
+        saladPilihan = QLabel("State yang dikunjungi: " + str(travelledStates))
+        layout.addWidget(saladPilihan)
 
         self.setLayout(layout)
 
@@ -597,18 +619,9 @@ class Dompet(QDialog, Ui_Widget):
         layout.addWidget(button3)
 
         self.setLayout(layout)
-        button1.clicked.connect(lambda:self.tambahSaldo(5000))
-        button2.clicked.connect(lambda:self.tambahSaldo(10000))
-        button3.clicked.connect(lambda:self.tambahSaldo(20000))
-
-    def show_alert(amount):   
-        msg_box = QMessageBox()
-        msg_box.setIcon(QMessageBox.Information)
-        msg_box.setWindowTitle("Uang Dikembalikan")
-        msg_box.setText("Saldo yang anda masukkan melebihi batas maksimum!!!")
-        msg_box.setText("Rp " + str(amount) + " telah dikembalikan")
-        msg_box.addButton(QMessageBox.Ok)
-        msg_box.exec()
+        button1.clicked.connect(lambda:vending_machine.transisi(self, 'x'))
+        button2.clicked.connect(lambda:vending_machine.transisi(self, 'y'))
+        button3.clicked.connect(lambda:vending_machine.transisi(self, 'z'))
 
     def tambahSaldo(self, uang):
         global saldoTotal
@@ -624,12 +637,13 @@ class Dompet(QDialog, Ui_Widget):
             saldoTotal += uang
             self.accept()
 
+
 class vending_machine(object):
     states = ['Q0', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11' 'Q12', 'Q13', 'Q14', 'Q15', 'Q16', 'Q17', 'Q18', 'Q19', 'Q20' 'Q21', 'Q22', 'Q23']
     sayuran = ['Selada', 'Tomat', 'Wortel', 'Timun', 'Kubis', 'Alpukat']
     dressing = ['Plain Mayonnaise', 'Spicy Mayonnaise', 'Olive Oil', 'Salt & Pepper']
-    amount = 0
-    choice = 0
+
+    
 
     def next(self):
         global pilihanSayur
@@ -691,6 +705,7 @@ class vending_machine(object):
             self.pushButton_3.setEnabled(True)
             self.pushButton_4.setEnabled(True)
             self.pushButton_5.setEnabled(True)
+            self.pushButton_6.setDisabled(True)
             self.pushButton_next.setDisabled(True)
             self.pushButton_reset.setDisabled(True)
         if (len(pilihanSayur) != 0 and len(pilihanDressing) != 0):
@@ -796,117 +811,265 @@ class vending_machine(object):
         self.pushButton_next.setEnabled(True)
         self.pushButton_reset.setEnabled(True)
 
-    def __init__(self):
-        self.machine = Machine(model=self, states=vending_machine.states, initial='Q0')
+    def transisi(self, inputU):
+        global currentState
+        global travelledState
+        global inputUser
 
-        self.machine.add_transition('x', 'Q1', 'Q0')
-        self.machine.add_transition('x', 'Q2', 'Q1')
-        self.machine.add_transition('x', 'Q3', 'Q2')
-        self.machine.add_transition('x', 'Q4', 'Q3')
-        self.machine.add_transition('x', 'Q5', 'Q4')
-        self.machine.add_transition('x', 'Q6', 'Q5')
-        self.machine.add_transition('x', 'Q7', 'Q6')
-        self.machine.add_transition('x', 'Q8', 'Q7')
-        self.machine.add_transition('x', 'Q8', 'Q8')
+        if inputU == 'x':
+            if currentState == 'Q0':
+                currentState = 'Q1'
+            elif currentState == 'Q1':
+                currentState = 'Q2'
+            elif currentState == 'Q2':
+                currentState = 'Q3'
+            elif currentState == 'Q3':
+                currentState = 'Q4'
+            elif currentState == 'Q4':
+                currentState = 'Q5'
+            elif currentState == 'Q5':
+                currentState = 'Q6'
+            elif currentState == 'Q6':
+                currentState = 'Q7'
+            elif currentState == 'Q7':
+                currentState = 'Q8'
+            travelledStates.append(currentState)
+            Dompet.tambahSaldo(self, 5000)
 
-        self.machine.add_transition('y', 'Q2', 'Q0')
-        self.machine.add_transition('y', 'Q3', 'Q1')
-        self.machine.add_transition('y', 'Q4', 'Q2')
-        self.machine.add_transition('y', 'Q5', 'Q3')
-        self.machine.add_transition('y', 'Q6', 'Q4')
-        self.machine.add_transition('y', 'Q7', 'Q5')
-        self.machine.add_transition('y', 'Q8', 'Q6')
-        self.machine.add_transition('y', 'Q7', 'Q7')
-        self.machine.add_transition('y', 'Q8', 'Q8')
+    
+        elif inputU == 'y':
+            if currentState == 'Q0':
+                currentState = 'Q2'
+            elif currentState == 'Q1':
+                currentState = 'Q3'
+            elif currentState == 'Q2':
+                currentState = 'Q4'
+            elif currentState == 'Q3':
+                currentState = 'Q5'
+            elif currentState == 'Q4':
+                currentState = 'Q6'
+            elif currentState == 'Q5':
+                currentState = 'Q7'
+            elif currentState == 'Q6':
+                currentState = 'Q8'
+            elif currentState == 'Q7':
+                currentState = 'Q7'
+            elif currentState == 'Q8':
+                currentState = 'Q8'
+            travelledStates.append(currentState)
+            Dompet.tambahSaldo(self, 10000)
 
-        self.machine.add_transition('z', 'Q4', 'Q0')
-        self.machine.add_transition('z', 'Q5', 'Q1')
-        self.machine.add_transition('z', 'Q6', 'Q2')
-        self.machine.add_transition('z', 'Q7', 'Q3')
-        self.machine.add_transition('z', 'Q8', 'Q4')
-        self.machine.add_transition('z', 'Q5', 'Q5')
-        self.machine.add_transition('z', 'Q6', 'Q6')
-        self.machine.add_transition('z', 'Q6', 'Q7')
-        self.machine.add_transition('z', 'Q7', 'Q8')
+        if inputU == 'z':
+            if currentState == 'Q0':
+                currentState = 'Q4'
+            elif currentState == 'Q1':
+                currentState = 'Q5'
+            elif currentState == 'Q2':
+                currentState = 'Q6'
+            elif currentState == 'Q3':
+                currentState = 'Q7'
+            elif currentState == 'Q4':
+                currentState = 'Q8'
+            elif currentState == 'Q5':
+                currentState = 'Q5'
+            elif currentState == 'Q6':
+                currentState = 'Q6'
+            elif currentState == 'Q7':
+                currentState = 'Q7'
+            elif currentState == 'Q8':
+                currentState = 'Q8'
+            travelledStates.append(currentState)
+            Dompet.tambahSaldo(self, 20000)
 
-        self.machine.add_transition('a', 'Q0', 'Q0')
-        self.machine.add_transition('a', 'Q10', 'Q9')
+        if inputU == 'a':
+            if currentState == 'Q0':
+                currentState = 'Q0'
+            elif currentState == 'Q9':
+                currentState = 'Q10'
+            travelledStates.append(currentState)
+            vending_machine.pilih_sayuran(self, 'a')
 
-        self.machine.add_transition('b', 'Q0', 'Q0')
-        self.machine.add_transition('b', 'Q11', 'Q9')
-        self.machine.add_transition('b', 'Q11', 'Q10')
+        if inputU == 'b':
+            if currentState == 'Q0':
+                currentState = 'Q0'
+            elif currentState == 'Q9':
+                currentState = 'Q11'
+            elif currentState == 'Q10':
+                currentState = 'Q11'
+            travelledStates.append(currentState)
+            vending_machine.pilih_sayuran(self, 'b')
 
-        self.machine.add_transition('c', 'Q0', 'Q0')
-        self.machine.add_transition('c', 'Q12', 'Q9')
-        self.machine.add_transition('c', 'Q12', 'Q10')
-        self.machine.add_transition('c', 'Q12', 'Q11')
+        if inputU == 'c':
+            if currentState == 'Q0':
+                currentState = 'Q0'
+            elif currentState == 'Q9':
+                currentState = 'Q12'
+            elif currentState == 'Q10':
+                currentState = 'Q12'
+            elif currentState == 'Q11':
+                currentState = 'Q12'
+            travelledStates.append(currentState)
+            vending_machine.pilih_sayuran(self, 'c')
+        
+        if inputU == 'd':
+            if currentState == 'Q0':
+                currentState = 'Q0'
+            elif currentState == 'Q9':
+                currentState = 'Q13'
+            elif currentState == 'Q10':
+                currentState = 'Q13'
+            elif currentState == 'Q11':
+                currentState = 'Q13'
+            elif currentState == 'Q12':
+                currentState = 'Q13'
+            travelledStates.append(currentState)
+            vending_machine.pilih_sayuran(self, 'd')
 
-        self.machine.add_transition('d', 'Q0', 'Q0')
-        self.machine.add_transition('d', 'Q13', 'Q9')
-        self.machine.add_transition('d', 'Q13', 'Q10')
-        self.machine.add_transition('d', 'Q13', 'Q11')
-        self.machine.add_transition('d', 'Q13', 'Q12')
+        if inputU == 'e':
+            if currentState == 'Q0':
+                currentState = 'Q0'
+            elif currentState == 'Q9':
+                currentState = 'Q14'
+            elif currentState == 'Q10':
+                currentState = 'Q14'
+            elif currentState == 'Q11':
+                currentState = 'Q14'
+            elif currentState == 'Q12':
+                currentState = 'Q14'
+            elif currentState == 'Q13':
+                currentState = 'Q14'
+            travelledStates.append(currentState)
+            vending_machine.pilih_sayuran(self, 'e')
 
-        self.machine.add_transition('e', 'Q0', 'Q0')
-        self.machine.add_transition('e', 'Q14', 'Q9')
-        self.machine.add_transition('e', 'Q14', 'Q10')
-        self.machine.add_transition('e', 'Q14', 'Q11')
-        self.machine.add_transition('e', 'Q14', 'Q12')
-        self.machine.add_transition('e', 'Q14', 'Q13')
+        if inputU == 'f':
+            if currentState == 'Q0':
+                currentState = 'Q0'
+            elif currentState == 'Q9':
+                currentState = 'Q15'
+            elif currentState == 'Q10':
+                currentState = 'Q15'
+            elif currentState == 'Q11':
+                currentState = 'Q15'
+            elif currentState == 'Q12':
+                currentState = 'Q15'
+            elif currentState == 'Q13':
+                currentState = 'Q15'
+            elif currentState == 'Q14':
+                currentState = 'Q15'
+            travelledStates.append(currentState)
+            vending_machine.pilih_sayuran(self, 'f')
 
-        self.machine.add_transition('f', 'Q0', 'Q0')
-        self.machine.add_transition('f', 'Q15', 'Q10')
-        self.machine.add_transition('f', 'Q15', 'Q11')
-        self.machine.add_transition('f', 'Q15', 'Q12')
-        self.machine.add_transition('f', 'Q15', 'Q13')
-        self.machine.add_transition('f', 'Q15', 'Q14')
+        if inputU == 'g':
+            if currentState == 'Q0':
+                currentState = 'Q0'
+            elif currentState == 'Q16':
+                currentState = 'Q17'
+            travelledStates.append(currentState)
+            vending_machine.pilih_dressing(self, 'g')
+        
+        if inputU == 'h':
+            if currentState == 'Q0':
+                currentState = 'Q0'
+            elif currentState == 'Q16':
+                currentState = 'Q18'
+            travelledStates.append(currentState)
+            vending_machine.pilih_dressing(self, 'h')
 
-        self.machine.add_transition('g', 'Q0', 'Q0')
-        self.machine.add_transition('g', 'Q17', 'Q16')
+        if inputU == 'i':
+            if currentState == 'Q0':
+                currentState = 'Q0'
+            elif currentState == 'Q16':
+                currentState = 'Q19'
+            travelledStates.append(currentState)
+            vending_machine.pilih_dressing(self, 'i')
+        
+        if inputU == 'j':
+            if currentState == 'Q0':
+                currentState = 'Q0'
+            elif currentState == 'Q16':
+                currentState = 'Q20'
+            travelledStates.append(currentState)
+            vending_machine.pilih_dressing(self, 'j')
+        
+        if inputU == 'p':
+            if currentState == 'Q0':
+                currentState = 'Q0'
+            elif currentState == 'Q10':
+                currentState = 'Q9'
+            elif currentState == 'Q11':
+                currentState = 'Q9'
+            elif currentState == 'Q12':
+                currentState = 'Q9'
+            elif currentState == 'Q13':
+                currentState = 'Q9'
+            elif currentState == 'Q14':
+                currentState = 'Q9'
+            elif currentState == 'Q15':
+                currentState = 'Q9'
+            elif currentState == 'Q17':
+                currentState = 'Q16'
+            elif currentState == 'Q18':
+                currentState = 'Q16'
+            elif currentState == 'Q19':
+                currentState = 'Q16'
+            elif currentState == 'Q20':
+                currentState = 'Q16'
+            travelledStates.append(currentState)
+            vending_machine.reset(self)
+        
+        if inputU == 'r':
+            if currentState == 'Q0':
+                currentState = 'Q0'
+            elif currentState == 'Q1':
+                currentState = 'Q22'
+            elif currentState == 'Q2':
+                currentState = 'Q22'
+            elif currentState == 'Q3':
+                currentState = 'Q22'
+            elif currentState == 'Q4':
+                currentState = 'Q22'
+            elif currentState == 'Q5':
+                currentState = 'Q22'
+            elif currentState == 'Q6':
+                currentState = 'Q22'
+            elif currentState == 'Q7':
+                currentState = 'Q22'
+            elif currentState == 'Q8':
+                currentState = 'Q22'
+            travelledStates.append(currentState)
+            vending_machine.cancel(self)
 
-        self.machine.add_transition('h', 'Q0', 'Q0')
-        self.machine.add_transition('h', 'Q18', 'Q16')
-
-        self.machine.add_transition('i', 'Q0', 'Q0')
-        self.machine.add_transition('i', 'Q19', 'Q16')
-
-        self.machine.add_transition('j', 'Q0', 'Q0')
-        self.machine.add_transition('j', 'Q20', 'Q16')
-
-        self.machine.add_transition('p', 'Q0', 'Q0')
-        self.machine.add_transition('p', 'Q9', 'Q10')
-        self.machine.add_transition('p', 'Q9', 'Q11')
-        self.machine.add_transition('p', 'Q9', 'Q12')
-        self.machine.add_transition('p', 'Q9', 'Q13')
-        self.machine.add_transition('p', 'Q9', 'Q14')
-        self.machine.add_transition('p', 'Q9', 'Q15')
-        self.machine.add_transition('p', 'Q16', 'Q17')
-        self.machine.add_transition('p', 'Q16', 'Q18')
-        self.machine.add_transition('p', 'Q16', 'Q19')
-        self.machine.add_transition('p', 'Q16', 'Q20')
-
-        self.machine.add_transition('r', 'Q0', 'Q0')
-        self.machine.add_transition('r', 'Q22', 'Q1')
-        self.machine.add_transition('r', 'Q22', 'Q2')
-        self.machine.add_transition('r', 'Q22', 'Q3')
-        self.machine.add_transition('r', 'Q22', 'Q4')
-        self.machine.add_transition('r', 'Q22', 'Q5')
-        self.machine.add_transition('r', 'Q22', 'Q6')
-        self.machine.add_transition('r', 'Q22', 'Q7')
-        self.machine.add_transition('r', 'Q22', 'Q8')
-
-        self.machine.add_transition('s', 'Q0', 'Q0')
-        self.machine.add_transition('s', 'Q9', 'Q3')
-        self.machine.add_transition('s', 'Q9', 'Q4')
-        self.machine.add_transition('s', 'Q9', 'Q5')
-        self.machine.add_transition('s', 'Q9', 'Q6')
-        self.machine.add_transition('s', 'Q9', 'Q7')
-        self.machine.add_transition('s', 'Q9', 'Q8')
-        self.machine.add_transition('s', 'Q16', 'Q12')
-        self.machine.add_transition('s', 'Q16', 'Q13')
-        self.machine.add_transition('s', 'Q16', 'Q14')
-        self.machine.add_transition('s', 'Q16', 'Q15')
-        self.machine.add_transition('s', 'Q21', 'Q17')
-        self.machine.add_transition('s', 'Q21', 'Q18')
-        self.machine.add_transition('s', 'Q21', 'Q19')
-        self.machine.add_transition('s', 'Q21', 'Q20')
+        if inputU == 's':
+            if currentState == 'Q0':
+                currentState = 'Q0'
+            elif currentState == 'Q3':
+                currentState = 'Q9'
+            elif currentState == 'Q4':
+                currentState = 'Q9'
+            elif currentState == 'Q5':
+                currentState = 'Q9'
+            elif currentState == 'Q6':
+                currentState = 'Q9'
+            elif currentState == 'Q7':
+                currentState = 'Q9'
+            elif currentState == 'Q8':
+                currentState = 'Q9'
+            elif currentState == 'Q12':
+                currentState = 'Q16'
+            elif currentState == 'Q13':
+                currentState = 'Q16'
+            elif currentState == 'Q14':
+                currentState = 'Q16'
+            elif currentState == 'Q15':
+                currentState = 'Q16'
+            elif currentState == 'Q17':
+                currentState = 'Q21'
+            elif currentState == 'Q18':
+                currentState = 'Q21'
+            elif currentState == 'Q19':
+                currentState = 'Q21'
+            elif currentState == 'Q20':
+                currentState = 'Q21'
+            travelledStates.append(currentState)
+            vending_machine.next(self)
+        inputUser.append(inputU)
