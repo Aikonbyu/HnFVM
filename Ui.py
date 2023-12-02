@@ -882,17 +882,13 @@ class vending_machine(object):
             Dompet.tambahSaldo(self, 20000)
 
         if inputU == 'a':
-            if currentState == 'Q0':
-                currentState = 'Q0'
-            elif currentState == 'Q9':
+            if currentState == 'Q9':
                 currentState = 'Q10'
             travelledStates.append(currentState)
             vending_machine.pilih_sayuran(self, 'a')
 
         if inputU == 'b':
-            if currentState == 'Q0':
-                currentState = 'Q0'
-            elif currentState == 'Q9':
+            if currentState == 'Q9':
                 currentState = 'Q11'
             elif currentState == 'Q10':
                 currentState = 'Q11'
@@ -900,9 +896,7 @@ class vending_machine(object):
             vending_machine.pilih_sayuran(self, 'b')
 
         if inputU == 'c':
-            if currentState == 'Q0':
-                currentState = 'Q0'
-            elif currentState == 'Q9':
+            if currentState == 'Q9':
                 currentState = 'Q12'
             elif currentState == 'Q10':
                 currentState = 'Q12'
@@ -912,9 +906,7 @@ class vending_machine(object):
             vending_machine.pilih_sayuran(self, 'c')
         
         if inputU == 'd':
-            if currentState == 'Q0':
-                currentState = 'Q0'
-            elif currentState == 'Q9':
+            if currentState == 'Q9':
                 currentState = 'Q13'
             elif currentState == 'Q10':
                 currentState = 'Q13'
@@ -926,9 +918,7 @@ class vending_machine(object):
             vending_machine.pilih_sayuran(self, 'd')
 
         if inputU == 'e':
-            if currentState == 'Q0':
-                currentState = 'Q0'
-            elif currentState == 'Q9':
+            if currentState == 'Q9':
                 currentState = 'Q14'
             elif currentState == 'Q10':
                 currentState = 'Q14'
@@ -942,9 +932,7 @@ class vending_machine(object):
             vending_machine.pilih_sayuran(self, 'e')
 
         if inputU == 'f':
-            if currentState == 'Q0':
-                currentState = 'Q0'
-            elif currentState == 'Q10':
+            if currentState == 'Q10':
                 currentState = 'Q15'
             elif currentState == 'Q11':
                 currentState = 'Q15'
@@ -958,25 +946,19 @@ class vending_machine(object):
             vending_machine.pilih_sayuran(self, 'f')
 
         if inputU == 'g':
-            if currentState == 'Q0':
-                currentState = 'Q0'
-            elif currentState == 'Q16':
+            if currentState == 'Q16':
                 currentState = 'Q17'
             travelledStates.append(currentState)
             vending_machine.pilih_dressing(self, 'g')
         
         if inputU == 'h':
-            if currentState == 'Q0':
-                currentState = 'Q0'
-            elif currentState == 'Q16':
+            if currentState == 'Q16':
                 currentState = 'Q18'
             travelledStates.append(currentState)
             vending_machine.pilih_dressing(self, 'h')
 
         if inputU == 'i':
-            if currentState == 'Q0':
-                currentState = 'Q0'
-            elif currentState == 'Q16':
+            if currentState == 'Q16':
                 currentState = 'Q19'
             travelledStates.append(currentState)
             vending_machine.pilih_dressing(self, 'i')
@@ -990,9 +972,7 @@ class vending_machine(object):
             vending_machine.pilih_dressing(self, 'j')
         
         if inputU == 'p':
-            if currentState == 'Q0':
-                currentState = 'Q0'
-            elif currentState == 'Q10':
+            if currentState == 'Q10':
                 currentState = 'Q9'
             elif currentState == 'Q11':
                 currentState = 'Q9'
@@ -1016,9 +996,7 @@ class vending_machine(object):
             vending_machine.reset(self)
         
         if inputU == 'r':
-            if currentState == 'Q0':
-                currentState = 'Q0'
-            elif currentState == 'Q1':
+            if currentState == 'Q1':
                 currentState = 'Q22'
             elif currentState == 'Q2':
                 currentState = 'Q22'
@@ -1038,9 +1016,7 @@ class vending_machine(object):
             vending_machine.cancel(self)
 
         if inputU == 's':
-            if currentState == 'Q0':
-                currentState = 'Q0'
-            elif currentState == 'Q3':
+            if currentState == 'Q3':
                 currentState = 'Q9'
             elif currentState == 'Q4':
                 currentState = 'Q9'
