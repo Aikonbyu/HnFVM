@@ -944,8 +944,6 @@ class vending_machine(object):
         if inputU == 'f':
             if currentState == 'Q0':
                 currentState = 'Q0'
-            elif currentState == 'Q9':
-                currentState = 'Q15'
             elif currentState == 'Q10':
                 currentState = 'Q15'
             elif currentState == 'Q11':
